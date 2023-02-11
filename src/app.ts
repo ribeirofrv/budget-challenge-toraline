@@ -1,4 +1,5 @@
-import * as express from 'express';
+import express from 'express';
+import Router from './Router';
 
 class App {
   public app: express.Express;
@@ -7,6 +8,7 @@ class App {
     this.app = express();
 
     this.config();
+    this.routes();
 
     this.app.get('/', (req, res) => res.json({ ok: true }));
   }
@@ -21,6 +23,10 @@ class App {
 
     this.app.use(express.json());
     this.app.use(accessControl);
+  }
+
+  private routes() {
+    this.app.use('/users', Router.user);
   }
 
   public start(PORT: string | number):void {
