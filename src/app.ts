@@ -1,4 +1,5 @@
 import express from 'express';
+import ErrorHandler from './Error/ErrorHandler';
 import Router from './Router';
 
 class App {
@@ -9,6 +10,7 @@ class App {
 
     this.config();
     this.routes();
+    this.app.use(ErrorHandler.prototype.handleError);
 
     this.app.get('/', (req, res) => res.json({ ok: true }));
   }
