@@ -1,15 +1,15 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import chai from 'chai';
 import sinon from 'sinon';
-
-const { expect } = chai;
 
 import ProductsController from '../../../src/Controller/ProductController';
 import ExternalApi from '../../../src/Service/ExternalApi';
 import products from '../mock/products';
-import { HttpException } from '../../../src/Error/HttpException';
+import HttpException from '../../../src/Error/HttpException';
 
-describe('Product - Controller', () => {
+const { expect } = chai;
+
+describe('Product - Controller', function () {
   let request: Request;
   let response: Response;
   let next: sinon.SinonStub;
@@ -41,7 +41,7 @@ describe('Product - Controller', () => {
     });
 
     it('should call next with the error if getting products fails', async function () {
-      const error = new HttpException(500,'Something went wrong');
+      const error = new HttpException(500, 'Something went wrong');
       sinon
         .stub(ExternalApi.prototype, 'getProducts')
         .rejects(error);

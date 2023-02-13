@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import { HttpException } from './HttpException';
+import HttpException from './HttpException';
 
 export default class ErrorHandler {
   constructor(
     private request: Request,
     private response: Response,
-    private next: NextFunction
+    private next: NextFunction,
   ) {}
 
   public handleError(error: HttpException) {
