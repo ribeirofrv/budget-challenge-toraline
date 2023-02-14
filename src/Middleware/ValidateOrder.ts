@@ -9,14 +9,15 @@ export default class ValidateOrder {
   ) {}
 
   public validate() {
-    const order = this.request.body as IProduct[];
+    const order = this.request.body;
     const userId = parseInt(this.request.params.userId, 10);
     if (!userId) {
       return this.response.status(400).json({
         message: 'userId is required',
       });
     }
-    if (!order || !order.length) {
+    const isValid = order.products.every((product: IProduct) => 'id' in product);
+    if (!isValid) {
       return this.response.status(400).json({
         message: 'products is required',
       });
