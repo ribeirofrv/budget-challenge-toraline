@@ -1,6 +1,6 @@
 import IOrder from '../Interface/IOrder';
 import IUser from '../Interface/IUser';
-import { IProduct } from '../Interface/IProduct';
+import { IProduct, IProductUnit } from '../Interface/IProduct';
 import ExternalApi from './ExternalApi';
 import HttpException from '../Error/HttpException';
 
@@ -10,7 +10,13 @@ export default class Budget extends ExternalApi {
     const tax = this.getTaxByUserId(userId);
     const productPrice = this.getProductPrice(products);
     const budget = await Promise.all([tax, productPrice]);
-    return budget[1] * (1 + budget[0]);
+    if (!budget) {
+      throw new HttpException(400, 'Unable to get quote, something went');
+    }
+    const total = {
+      budget: (budget[1] * budget[0]).toFixed(2),
+    };
+    return total;
   }
 
   async getTaxByUserId(userId: number) {
@@ -21,12 +27,16 @@ export default class Budget extends ExternalApi {
     return userTaxDecimal;
   }
 
-  async getProductPrice(products: IProduct[]) {
+  async getProductPrice(products: IProductUnit[]) {
     const getProducts = await this.getProducts();
     const productPrice = products.reduce((acc, curr) => {
-      const currProduct = getProducts.find((product: IProduct) => product.id === curr.id);
-      return acc + currProduct.price;
+      const currProduct = getProducts.find(
+        (product: IProduct) => product.id === curr.id,
+      );
+      return acc + (currProduct.price * curr.quantity);
     }, 0);
+    console.log('productPrice', productPrice);
+
     return productPrice;
   }
 }
