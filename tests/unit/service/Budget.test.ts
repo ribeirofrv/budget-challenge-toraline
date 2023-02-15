@@ -54,28 +54,35 @@ describe('Budget - Service', function () {
 
   describe('get budget', function () {
     it('should return the budget of the order with two products', async function () {
+      const { userId, products } = orderResults.ofTwoProducts;
       const getTaxByUserIdStub = sandbox
         .stub(budget, 'getTaxByUserId')
         .resolves(79); // tax of user 1
-
+      const getFeePerProductStub = sandbox
+        .stub(budget, 'getFeePerProduct')
+        .resolves({ userId, products });
       const getProductPriceStub = sandbox
         .stub(budget, 'getProductPrice')
         .resolves(9380);
-
       const result = await budget.getBudget(orderBodys.ofTwoProducts);
       expect(getTaxByUserIdStub.calledOnce).to.be.true;
+      expect(getFeePerProductStub.calledOnce).to.be.true;
       expect(getProductPriceStub.calledOnce).to.be.true;
-      expect(result).to.have.property('budget');
-      
-      // NOTE: This is the line that is failing
-      expect(result.budget).to.be.equal(orderResults.ofTwoProducts.budget);
+      expect(result).to.have.property('userId');
+      expect(result).to.have.property('products');
+      expect(result).to.have.property('finalPrice');
+      expect(result).to.be.equals(orderResults.ofTwoProducts);
     });
 
     it('should return the budget of the order with one product', async function () {
+      const { userId, products } = orderResults.ofOneProdcut;
+
       const getTaxByUserIdStub = sandbox
         .stub(budget, 'getTaxByUserId')
         .resolves(42); // tax of user 55
-
+      const getFeePerProductStub = sandbox
+        .stub(budget, 'getFeePerProduct')
+        .resolves({ userId, products });
       const getProductPriceStub = sandbox
         .stub(budget, 'getProductPrice')
         .resolves(15072);
@@ -83,24 +90,26 @@ describe('Budget - Service', function () {
       const result = await budget.getBudget(orderBodys.ofOneProdcut);
       expect(getTaxByUserIdStub.calledOnce).to.be.true;
       expect(getProductPriceStub.calledOnce).to.be.true;
-      expect(result).to.have.property('budget');
-      expect(result.budget).to.be.equal(orderResults.ofOneProdcut.budget);
+      expect(result).to.have.property('userId');
+      expect(result).to.have.property('products');
+      expect(result).to.have.property('finalPrice');
+      expect(result).to.be.equals(orderResults.ofOneProdcut);
     });
 
-    it('should return the budget of the order with no products', async function () {
+    it('should return an error if the order has no products', async function () {
       const getTaxByUserIdStub = sandbox
         .stub(budget, 'getTaxByUserId')
         .resolves(145); // tax of user 78
-
+      const getFeePerProductStub = sandbox
+        .stub(budget, 'getFeePerProduct')
+        .resolves({ userId: 78, products: [] });
       const getProductPriceStub = sandbox
         .stub(budget, 'getProductPrice')
-        .resolves(0.00)
-
-      const result = await budget.getBudget(orderBodys.ofNoProducts);
-      expect(getTaxByUserIdStub.calledOnce).to.be.true;
-      expect(getProductPriceStub.calledOnce).to.be.true;
-      expect(result).to.have.property('budget');
-      expect(result.budget).to.be.equal(orderResults.ofNoProducts.budget);
+        .resolves(0.0);
+      
+      expect(budget.getBudget(orderBodys.ofNoProducts)).to.be.rejectedWith(
+        'Unable to get quote, something went'
+      );
     });
   });
 });

@@ -4,11 +4,9 @@ export const orderBodys = {
     products: [
       {
         id: 1,
-        quantity: 1,
       },
       {
         id: 2,
-        quantity: 1,
       },
     ],
   },
@@ -17,7 +15,6 @@ export const orderBodys = {
     products: [
       {
         id: 7,
-        quantity: 3,
       },
     ],
   },
@@ -29,12 +26,36 @@ export const orderBodys = {
 
 export const orderResults = {
   ofTwoProducts: {
-    budget: '7410.20', // userId: 1
+    userId: 1,
+    products: [
+      {
+        name: 'explicabo alias hic reprehenderit deleniti quos id reprehenderit consequuntur ipsam iure voluptatem ea culpa excepturi ducimus repudiandae ab',
+        price: 6945,
+        tax: '79%',
+        total: 12431.55,
+      },
+      {
+        name: 'nostrum veritatis reprehenderit repellendus vel numquam soluta ex inventore ex',
+        price: 2435,
+        tax: '79%',
+        total: 4358.65,
+      },
+    ],
+    finalPrice: 16790.2,
   },
   ofOneProdcut: {
-    budget: '6330.24', // userId: 55
+    userId: 55,
+    products: [
+      {
+        name: 'doloremque beatae vitae nam est reiciendis a ut veritatis animi a laudantium ab reiciendis veniam dolores consectetur asperiores in',
+        price: 5024,
+        tax: '42%',
+        total: 7134.08,
+      },
+    ],
+    finalPrice: 7134.08,
   },
   ofNoProducts: {
-    budget: '0.00', // userId: 78
+    message: 'products is required',
   },
 };
