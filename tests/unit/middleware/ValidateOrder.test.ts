@@ -6,7 +6,7 @@ import ValidateOrder from '../../../src/Middleware/ValidateOrder';
 
 const { expect } = chai;
 
-describe.only('ValidateOrder', function () {
+describe('ValidateOrder', function () {
   let request: Request;
   let response: Response;
   let next: sinon.SinonStub;
@@ -44,7 +44,7 @@ describe.only('ValidateOrder', function () {
 
   it('should return 400 status and message "product is required" if product id is not provided', function () {
     const request = {
-      body: { product: {} },
+      body: { products: [] },
       params: { userId: '1' },
     } as unknown as Request;
     const response = {
