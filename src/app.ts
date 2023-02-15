@@ -30,6 +30,7 @@ class App {
   private routes() {
     this.app.use('/users', Router.user);
     this.app.use('/products', Router.product);
+    this.app.use('/api-docs', Router.swagger);
   }
 
   public start(PORT: string | number):void {

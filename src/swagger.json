@@ -1,0 +1,199 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API de Orçamento",
+    "description": "Uma API para gerenciar orçamentos de produtos",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "user",
+      "description": "Tudo sobre usuários"
+    },
+    {
+      "name": "product",
+      "description": "Tudo sobre produtos"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Lista todos os usuários",
+        "responses": {
+          "200": {
+            "description": "Operação bem sucedida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/budget": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Recerber orçamento do usuário",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Order"
+              }
+            }
+          },
+          "required": true
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID para obter taxa do usuário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "products",
+            "in": "body",
+            "description": "Lista de produtos",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ProductOrder"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação bem sucedida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requer pelo menos um produto valido",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "product is required"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "tags": ["product"],
+        "summary": "Lista todos os produtos",
+        "responses": {
+          "200": {
+            "description": "sucessful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "tax": {
+            "type": "number"
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          }
+        }
+      },
+      "ProductOrder": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                },
+                "tax": {
+                  "type": "string"
+                },
+                "total": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "total": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}
